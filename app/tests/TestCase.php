@@ -82,10 +82,6 @@ class TestCase extends BaseTestCase
     {
         $uses = array_flip(class_uses_recursive(static::class));
 
-        /*if (isset($uses[DatabaseMigrations::class])) {
-            $this->runDatabaseMigrations();
-        }*/
-
         if (isset($uses[DatabaseTransactions::class])) {
             $this->beginDatabaseTransaction();
         }

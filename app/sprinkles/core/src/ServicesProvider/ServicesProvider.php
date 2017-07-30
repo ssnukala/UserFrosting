@@ -55,6 +55,7 @@ use UserFrosting\Sprinkle\Core\Util\ShutdownHandler;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Repository\Loader\ArrayFileLoader;
 use UserFrosting\Support\Repository\Repository;
+use UserFrosting\Tests\TestModelStore;
 
 /**
  * UserFrosting core services provider.
@@ -406,7 +407,8 @@ class ServicesProvider
             $factoriesPath = $c->locator->findResources('factories://', true, true);
 
             // Create a new Factory Muffin instance
-            $fm = new FactoryMuffin();
+            $modelStore = new TestModelStore();
+            $fm = new FactoryMuffin($modelStore);
 
             // Load all of the model definitions
             $fm->loadFactories($factoriesPath);
