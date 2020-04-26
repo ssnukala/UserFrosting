@@ -48,14 +48,17 @@ class ClassMapper
      *
      * @return string
      */
-    public function getClassMapping($identifier)
+    public function getClassMapping($identifier, $throwException = true)
     {
         if (isset($this->classMappings[$identifier])) {
             return $this->classMappings[$identifier];
         } else {
-            throw new \OutOfBoundsException("There is no class mapped to the identifier '$identifier'.");
+            if ($throwException) {
+                throw new \OutOfBoundsException("There is no class mapped to the identifier '$identifier'.");
+            } else {
+                return false;
+            }
         }
-    }
 
     /**
      * Assigns a fully qualified class name to a specified class identifier.

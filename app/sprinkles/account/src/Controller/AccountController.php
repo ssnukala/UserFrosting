@@ -254,12 +254,12 @@ class AccountController extends SimpleController
                 // Create and send email
                 $message = new TwigMailMessage($this->ci->view, 'mail/password-reset.html.twig');
                 $message->from($config['address_book.admin'])
-                        ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
-                        ->addParams([
-                            'user'         => $user,
-                            'token'        => $passwordReset->getToken(),
-                            'request_date' => Carbon::now()->format('Y-m-d H:i:s'),
-                        ]);
+                    ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
+                    ->addParams([
+                        'user'         => $user,
+                        'token'        => $passwordReset->getToken(),
+                        'request_date' => Carbon::now()->format('Y-m-d H:i:s'),
+                    ]);
 
                 $this->ci->mailer->send($message);
             }
@@ -309,8 +309,8 @@ class AccountController extends SimpleController
         $captcha->generateRandomCode();
 
         return $response->withStatus(200)
-                    ->withHeader('Content-Type', 'image/png;base64')
-                    ->write($captcha->getImage());
+            ->withHeader('Content-Type', 'image/png;base64')
+            ->write($captcha->getImage());
     }
 
     /**
@@ -995,7 +995,12 @@ class AccountController extends SimpleController
         unset($data['passwordc']);
 
         // Now that we check the form, we can register the actual user
-        $registration = new Registration($this->ci, $data);
+        $regClass = $classMapper->getClassMapping('registrationClass', false);
+        if ($regClass === false) {
+            $registration = new Registration($this->ci, $data);
+        } else {
+            $registration = new $regClass($this->ci, $data);
+        }
 
         // Try registration. An HttpException will be thrown if it fails
         // No need to catch, as this kind of exception will automatically returns the addMessageTranslated
@@ -1097,11 +1102,11 @@ class AccountController extends SimpleController
                 $message = new TwigMailMessage($this->ci->view, 'mail/resend-verification.html.twig');
 
                 $message->from($config['address_book.admin'])
-                        ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
-                        ->addParams([
-                            'user'  => $user,
-                            'token' => $verification->getToken(),
-                        ]);
+                    ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
+                    ->addParams([
+                        'user'  => $user,
+                        'token' => $verification->getToken(),
+                    ]);
 
                 $this->ci->mailer->send($message);
             }
