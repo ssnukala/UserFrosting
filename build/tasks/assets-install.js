@@ -90,11 +90,12 @@ export async function assetsInstall() {
 
         // Browserify dependencies
         log.info("Compiling compatible node modules into UMD bundles with browserify");
-        deleteSync(vendorAssetsDir + "browserify_modules/", { force: true });
+        deleteSync(vendorAssetsDir + "browser_modules/", { force: true });
         await browserifyDependencies({
             dependencies: Object.keys(pkg.dependencies),
             inputDir: vendorAssetsDir + "node_modules/",
             outputDir: vendorAssetsDir + "browser_modules/",
+            silentFailures: true,
         });
     }
     else {
