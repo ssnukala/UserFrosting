@@ -171,7 +171,8 @@ class ServicesProvider
         $container['authLogger'] = function ($c) {
             $logger = new Logger('auth');
 
-            $logFile = $c->get('locator')->findResource('log://userfrosting.log', true, true);
+            $filename = $c->config['logfiles.custom.auth'] ? $c->config['logfiles.custom.auth'] : $c->config['logfiles.default'];
+            $logFile = $c->get('locator')->findResource('log://' . $filename, true, true);
 
             $handler = new StreamHandler($logFile);
 

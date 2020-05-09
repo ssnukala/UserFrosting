@@ -225,6 +225,27 @@ return [
 
     /*
     * ----------------------------------------------------------------------
+    * Logfile Config
+    * ----------------------------------------------------------------------
+    * 
+    */
+    'logfiles' => [
+        'default' => 'userfrosting_' . date('Ym') . '.log'
+        /** 
+     * Uncomment this to Customize Logs for Each type or just use the default above
+     * */
+        /*
+        ,'custom' => [
+            'auth' => 'auth_userfrosting_' . date('Ym') . '.log',
+            'debug' => 'debug_userfrosting_' . date('Ym') . '.log',
+            'error' => 'error_userfrosting_' . date('Ym') . '.log',
+            'mail' => 'mail_userfrosting_' . date('Ym') . '.log',
+            'query' => 'query_userfrosting_' . date('Ym') . '.log'
+        ]
+        */
+    ],
+    /*
+    * ----------------------------------------------------------------------
     * Mail Service Config
     * ----------------------------------------------------------------------
     * See https://learn.userfrosting.com/mail/the-mailer-service
