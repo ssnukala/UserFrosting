@@ -10,12 +10,17 @@
 
 namespace UserFrosting\App;
 
+use UserFrosting\App\Csrf\CsrfGuard;
 use UserFrosting\ServicesProvider\ServicesProviderInterface;
+use UserFrosting\Sprinkle\Core\Csrf\CsrfGuard as CoreCsrfGuard;
 
 class MyServices implements ServicesProviderInterface
 {
     public function register(): array
     {
-        return [];
+        return [
+            // Override the Core CsrfGuard to fix CLI context issue
+            CoreCsrfGuard::class => \DI\autowire(CsrfGuard::class),
+        ];
     }
 }
