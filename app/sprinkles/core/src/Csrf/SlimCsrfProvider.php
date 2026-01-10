@@ -29,17 +29,23 @@ class SlimCsrfProvider implements CsrfProviderInterface
      */
     public static function setupService(ContainerInterface $ci)
     {
-        $csrfKey = $ci->config['session.keys.csrf'];
+        // In CLI mode (e.g., Bakery commands), use array storage instead of session storage
+        // to avoid session initialization issues
+        if (isset($ci['cli']) && $ci['cli']) {
+            $csrfStorage = new \ArrayObject();
+        } else {
+            $csrfKey = $ci->config['session.keys.csrf'];
 
-        // Workaround so that we can pass storage into CSRF guard.
-        // If we tried to directly pass the indexed portion of `session` (for example, $ci->session['site.csrf']),
-        // we would get an 'Indirect modification of overloaded element of UserFrosting\Session\Session' error.
-        // If we tried to assign an array and use that, PHP would only modify the local variable, and not the session.
-        // Since ArrayObject is an object, PHP will modify the object itself, allowing it to persist in the session.
-        if (!$ci->session->has($csrfKey)) {
-            $ci->session[$csrfKey] = new \ArrayObject();
+            // Workaround so that we can pass storage into CSRF guard.
+            // If we tried to directly pass the indexed portion of `session` (for example, $ci->session['site.csrf']),
+            // we would get an 'Indirect modification of overloaded element of UserFrosting\Session\Session' error.
+            // If we tried to assign an array and use that, PHP would only modify the local variable, and not the session.
+            // Since ArrayObject is an object, PHP will modify the object itself, allowing it to persist in the session.
+            if (!$ci->session->has($csrfKey)) {
+                $ci->session[$csrfKey] = new \ArrayObject();
+            }
+            $csrfStorage = $ci->session[$csrfKey];
         }
-        $csrfStorage = $ci->session[$csrfKey];
 
         $onFailure = function ($request, $response, $next) {
             $e = new BadRequestException('The CSRF code was invalid or not provided.');
